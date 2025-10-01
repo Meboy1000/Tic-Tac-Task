@@ -4,12 +4,12 @@
   "description": "This will be an app for the csc 307 class",
   "main": "index.js",
   "scripts": {
+    "dev": "npm run dev -w react-frontend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "JavierMB",
-  "license": "ISC"
-  ,
-  "workspace": [
+  "license": "ISC",
+  "workspaces": [
     "packages/*"
   ]
 }
