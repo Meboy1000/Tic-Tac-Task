@@ -61,6 +61,29 @@ const addUser = (user) => {
   return user;
 };
 
+const deleteUserById = (id) => {
+  const index = users["users_list"].findIndex(user => user.id === id);
+  if (index === -1) return false; // user not found
+  users["users_list"].splice(index, 1);
+  return true; // user deleted
+};
+
+const findUsersByNameAndJob = (name, job) => {
+  return users["users_list"].filter(user => {
+    if (name && job) {
+      return user.name === name && user.job === job;
+    } else if (name) {
+      return user.name === name;
+    } else if (job) {
+      return user.job === job;
+    } else {
+      return true;
+    }
+  });
+};
+
+
+
 
 
 
@@ -91,6 +114,31 @@ app.post("/users", (req, res) => {
   addUser(userToAdd);
   res.status(200).send();
 });
+
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const deleted = deleteUserById(id);
+  if (deleted) {
+    res.status(200).send(`User with ID ${id} deleted.`);
+  } else {
+    res.status(404).send("User not found.");
+  }
+});
+
+app.get("/users/filter", (req, res) => {
+  const { name, job } = req.query;
+
+  if (!name && !job) {
+    return res.status(400).send("Please provide a name, a job, or both.");
+  }
+
+  const result = users["users_list"].filter(user => {
+    return (name ? user.name === name : true) && (job ? user.job === job : true);
+  });
+
+  res.send({ users_list: result });
+});
+
 
 
 
