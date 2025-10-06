@@ -51,9 +51,14 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 const addUser = (user) => {
-  users["users_list"].push(user);
-  return user;
+  const newUser = {
+    ...user,
+    id: Math.random().toString(36).substr(2, 9),
+  };
+  users["users_list"].push(newUser);
+  return newUser;
 };
+
 
 const deleteUserById = (id) => {
   const index = users["users_list"].findIndex(user => user.id === id);
@@ -98,6 +103,8 @@ app.get("/users", (req, res) => {
 
   res.send({ users_list: result });
 });
+
+
 app.get("/users/:id", (req, res) => {
   const id = req.params.id; 
   const result = findUserById(id);
@@ -112,24 +119,25 @@ app.get("/users/:id", (req, res) => {
 app.delete("/users/:id", (req, res) => {
   const id = req.params.id;
   const deleted = deleteUserById(id);
+
   if (deleted) {
-    res.status(200).send(`User with ID ${id} deleted.`);
+    res.status(204).send();
   } else {
     res.status(404).send("User not found.");
   }
 });
 
 app.post("/users", (req, res) => {
-  const newUser = req.body;
+  const user = req.body;
 
- 
-  newUser.id = Math.random().toString(36).substr(2, 9);
+  if (!user.name || !user.job) {
+    return res.status(400).send("Missing name or job");
+  }
 
-  users.users_list.push(newUser);
-
-
+  const newUser = addUser(user);
   res.status(201).send(newUser);
 });
+
 
 
 

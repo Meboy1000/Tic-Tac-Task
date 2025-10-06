@@ -34,20 +34,33 @@ function postUser(person) {
 
 function updateList(person) { 
   postUser(person)
-    .then(() => setCharacters([...characters, person]))
-    .catch((error) => {
-      console.log(error);
-    });
+    .then(res=>{
+      if(res.status === 201){
+        return res.json();
+      } else {
+        throw new Error("Failed to add user");
+      }
+    })
+    .then(newUser => setCharacters([...characters, newUser]))
+    .catch(error => console.log(error));
 }
 
 
-
-function removeCharacter(index) {
-  const updated = characters.filter((character, i)=> {
-    return i !== index;
-  });
-  setCharacters(updated);
+function removeCharacter(id) {
+  fetch(`http://localhost:8000/users/${id}`, {
+    method: "DELETE",
+  })
+    .then(res => {
+      if (res.status === 204) {
+        
+        setCharacters(characters.filter(character => character.id !== id));
+      } else if (res.status === 404) {
+        console.log("User not found on backend");
+      }
+    })
+    .catch(error => console.log(error));
 }
+
 
 
 return (
