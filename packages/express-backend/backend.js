@@ -1,9 +1,10 @@
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const port = 8000;
 
-
+app.use(cors());
 
 app.use(express.json());
 
@@ -46,8 +47,6 @@ const users = {
 };
 
 
-
-
 const findUserById = (id) => 
   users["users_list"].find((user) => user["id"] === id);
 
@@ -82,9 +81,6 @@ const findUsers = (name, job) => {
     return match;
   });
 };
-
-
-
 
 
 app.get("/users", (req, res) => {
@@ -122,6 +118,19 @@ app.delete("/users/:id", (req, res) => {
     res.status(404).send("User not found.");
   }
 });
+
+app.post("/users", (req, res) => {
+  const newUser = req.body;
+
+ 
+  newUser.id = Math.random().toString(36).substr(2, 9);
+
+  users.users_list.push(newUser);
+
+
+  res.status(201).send(newUser);
+});
+
 
 
 
