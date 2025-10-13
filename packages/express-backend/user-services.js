@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import userModel from "./user";
+import userModel from "./user.js";
 
 mongoose.set("debug", true);
 
@@ -40,10 +40,16 @@ function findUserByJob(job) {
   return userModel.find({ job: job });
 }
 
+function deleteUserById(id) {
+  return userModel.findByIdAndDelete(id);
+}
+
+
 export default {
   addUser,
   getUsers,
   findUserById,
   findUserByName,
   findUserByJob,
+  deleteUserById,
 };
