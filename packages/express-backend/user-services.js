@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 import userModel from "./user.js";
+import dotenv from "dotenv";
+
+
+dotenv.config();
 
 mongoose.set("debug", true);
 
 mongoose
-  .connect("mongodb://localhost:27017/users", {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
