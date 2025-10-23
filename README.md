@@ -23,3 +23,14 @@ URI = mongodb+srv://<db_username>:<db_password>@cluster0.ladudk8.mongodb.net/?re
 ```
 
 3. Replace the <db_username> and <db_password> without the with info sent on discord.
+
+# Contributing
+
+- Pascal Casing
+
+- 4 Whitespace Indent
+
+- Indent after a curly brace
+      - Function Definition, Curly Brace, Newline, Function Body
+
+- Use Prettier
