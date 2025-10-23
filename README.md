@@ -1,6 +1,6 @@
 # Mongo DB Atlas
 
-1. Login into or create Mongo DB Atlas account
+1. Login into or create Mongo DB Atlas account (https://account.mongodb.com/account/login)
 
 2. Connect to cloud using this url
 
