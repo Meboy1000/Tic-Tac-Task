@@ -7,6 +7,8 @@ export default function Home() {
 		{landingContent.map((home) =>
 			<LandingPagePreview
 			title={home.title}
+		        username={home.username}
+			password={home.password}
 			/>
 		)}
 	</>
