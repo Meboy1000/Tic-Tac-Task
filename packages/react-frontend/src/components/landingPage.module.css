@@ -1,0 +1,15 @@
+.title {
+	font-size: 100px;
+}
+
+.loginContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.login {
+	width: 50%; 
+	border: 2px solid black;
+	border-radius: 5%;
+}
