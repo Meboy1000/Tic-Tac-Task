@@ -28,6 +28,7 @@ export async function getMatchesForUser(userId) {
     console.error('Error fetching matches for user:', error.message);
     throw error;
   }
+  // Returns a list either way
   return data || [];
 }
 
@@ -55,6 +56,5 @@ export async function getTasksForUserMatch(userId, matchId) {
     console.error('Error fetching tasks:', error.message);
     throw error;
   }
-  // Returns a list either way
   return data || [];
 }
