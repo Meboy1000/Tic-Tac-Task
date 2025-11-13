@@ -9,11 +9,14 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const setLogin = () => {
     if (username && password) {
+      console.log(`Logging in with username: ${username} and password: ${password}`);
+      alert("okay logged player");
       onLogin();
     }
   };
+
 
   return (
     <div className={styles.container}>
@@ -43,12 +46,12 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              onKeyDown={(e) => e.key === 'Enter' && setLogin()}
               placeholder="Enter password"
             />
           </div>
 
-          <button type="button" onClick={handleLogin}>Login</button>
+          <button type="button" onClick={setLogin}>Create Game</button>
         </div>
       </div>
     </div>

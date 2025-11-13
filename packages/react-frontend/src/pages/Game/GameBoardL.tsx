@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './gameboards.module.css';
 
 interface GameBoardProps {
@@ -14,6 +14,13 @@ export default function GameBoard({ onLogout }: GameBoardProps) {
   const [tempTasks, setTempTasks] = useState<string[]>(Array(9).fill(''));
   const [showTimePopup, setShowTimePopup] = useState(false);
   const [tempTime, setTempTime] = useState<string>('');
+
+  useEffect(() => {
+    // auto open Player 1 task entry on first load
+    setCurrentPlayer(1);
+    setTempTasks(Array(9).fill(''));
+    setShowPopup(true);
+  }, []);
 
   const openPlayerPopup = (player: number) => {
     setCurrentPlayer(player);
@@ -93,15 +100,6 @@ export default function GameBoard({ onLogout }: GameBoardProps) {
         <button onClick={() => openPlayerPopup(2)} className={styles.playerBtn}>
           Player 2 - Enter Tasks
         </button>
-        <button onClick={() => setShowTimePopup(true)} className={styles.timeBtn}>
-          Set Time Limit
-        </button>
-        {timeLimit > 0 && (
-          <>
-            <span className={styles.timeDisplay}>Time Limit: {timeLimit} minutes</span>
-            <button onClick={clearTime} className={styles.clearTimeBtn}>Clear Time</button>
-          </>
-        )}
         <button onClick={clearAllTasks} className={styles.clearAllBtn}>Clear All Tasks</button>
       </div>
 
