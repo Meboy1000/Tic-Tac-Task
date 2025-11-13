@@ -33,3 +33,8 @@ URI = mongodb+srv://<db_username>:<db_password>@cluster0.ladudk8.mongodb.net/?re
 - Indent after a curly brace (Function Definition, Curly Brace, Newline, Function Body)
 
 - Use Prettier
+
+# Access Control Diagram
+
+<img width="5410" height="2652" alt="AccessControlDiagrams" src="https://github.com/user-attachments/assets/d14dadd5-ebea-4702-814c-5e472b1ddfec" />
+
