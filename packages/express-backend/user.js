@@ -1,25 +1,47 @@
-import mongoose from "mongoose";
+import supabase from './supabaseClient.js';
 
-const UserSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    job: {
-      type: String,
-      required: true,
-      trim: true,
-      validate(value) {
-        if (value.length < 2)
-          throw new Error("Invalid job, must be at least 2 characters.");
-      },
-    },
-  },
-  { collection: "users_list" }
-);
+// Fetch all users
+export async function getAllUsers() {
+  const { data, error } = await supabase.rpc('get_all_users');
+  if (error) {
+    console.error('Error fetching users:', error.message);
+    throw error;
+  }
+  // Returns list either way
+  return data || [];
+}
 
-const User = mongoose.model("User", UserSchema);
+// Fetches user given a user id
+export async function getUserById(id) {
+  const {data, error} = await supabase.rpc('get_user_by_id', {user_id: id});
+  if (error) {
+    console.error('Error fetching user:', error.message);
+    throw error;
+  }
+  // Technically gives us a list object (even though it can only have 1 max row), so I make it single result
+  return data?.[0] || null;
+}
 
-export default User;
+// Add new user
+export async function addUser({ username, password }) {
+  const { data, error } = await supabase.rpc('add_user', {
+    new_username: username,
+    new_password: password
+  });
+  if (error) {
+    console.error('Error adding user:', error.message);
+    throw error;
+  }
+  return data?.[0] || null;
+}
+
+// Delete user by id
+export async function deleteUserById(id) {
+  const { data, error } = await supabase.rpc('delete_user_by_id', { user_id: id });
+  if (error) {
+    console.error('Error deleting user:', error.message);
+    throw error;
+  }
+  // Boolean on whether it deleted something or not
+  return data;
+}
