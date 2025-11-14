@@ -6,14 +6,27 @@ interface LandingPageProps {
 }
 
 export default function LandingPagePreview({ onLogin }: LandingPageProps) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [creds, setCreds] = useState({
+    username: "",
+    pwd: ""
+  });
 
-  const handleLogin = () => {
-    if (username && password) {
-      onLogin();
+  function handleChange(event) {
+    const { name, value } = event.target;
+    switch (name) {
+      case "username":
+        setCreds({ ...creds, username: value });
+        break;
+      case "password":
+        setCreds({ ...creds, pwd: value });
+        break;
     }
-  };
+  }
+
+  function submitForm() {
+    props.handleSubmit(creds);
+    setCreds({ username: "", pwd: "" });
+  }
 
   return (
     <div className={styles.container}>
@@ -29,8 +42,8 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
               id="username"
               name="username"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={creds.username}
+              onChange={handleChange}
               placeholder="Enter username"
             />
           </div>
@@ -41,14 +54,14 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
               id="password"
               name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              value={creds.pwd}
+              onChange={handleChange}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               placeholder="Enter password"
             />
           </div>
 
-          <button type="button" onClick={handleLogin}>Login</button>
+          <button type="button" onClick={handleSubmit}>Login</button>
         </div>
       </div>
     </div>
