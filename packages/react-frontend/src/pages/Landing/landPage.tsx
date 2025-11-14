@@ -8,11 +8,20 @@ interface LandingPageProps {
 export default function LandingPagePreview({ onLogin }: LandingPageProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [roomId, setRoomId] = useState('');
 
   const setLogin = () => {
     if (username && password) {
       console.log(`Logging in with username: ${username} and password: ${password}`);
       alert("okay logged player");
+      onLogin();
+    }
+  };
+
+  const handleJoinGame = () => {
+    if (username && password && roomId) {
+      console.log(`Joining game with room ID: ${roomId}`);
+      alert(`Joining game with room ID: ${roomId}`);
       onLogin();
     }
   };
@@ -52,6 +61,23 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
           </div>
 
           <button type="button" onClick={setLogin}>Create Game</button>
+        </div>
+
+        <div className={styles.login}>
+          <h4>Or Join a Game</h4>
+          <div className={styles.field}>
+            <label htmlFor="roomId">Room ID:</label>
+            <input
+              id="roomId"
+              name="roomId"
+              type="text"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
+              placeholder="Enter room ID"
+            />
+          </div>
+
+          <button type="button" onClick={handleJoinGame}>Join Game</button>
         </div>
       </div>
     </div>
