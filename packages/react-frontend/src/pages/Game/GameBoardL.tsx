@@ -82,6 +82,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
     setCellMarks(Array(9).fill(0));
     console.log('Board marks cleared');
   };
+   
 
   const handleCellClick = (index: number) => {
     const newMarks = [...cellMarks];

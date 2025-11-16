@@ -9,6 +9,7 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [roomId, setRoomId] = useState('');
+  const [showJoinSection, setShowJoinSection] = useState(false);
 
   const setLogin = () => {
     if (username && password) {
@@ -61,24 +62,35 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
           </div>
 
           <button type="button" onClick={setLogin}>Create Game</button>
+          <button
+            type="button"
+            className={styles.joinToggleButton}
+            onClick={() => setShowJoinSection(!showJoinSection)}
+            style={{ marginTop: "20px" }}
+          >
+            {showJoinSection ? "Hide Join Game" : "Join Game"}
+          </button>
         </div>
 
-        <div className={styles.login}>
-          <h4>Or Join a Game</h4>
-          <div className={styles.field}>
-            <label htmlFor="roomId">Room ID:</label>
-            <input
-              id="roomId"
-              name="roomId"
-              type="text"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-              placeholder="Enter room ID"
-            />
+        {/* JOIN GAME SECTION (only visible if showJoinSection = true) */}
+        {showJoinSection && (
+          <div className={styles.login}>
+            <h4>Join a Game</h4>
+
+            <div className={styles.field}>
+              <label htmlFor="roomId">Room ID:</label>
+              <input
+                id="roomId"
+                type="text"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                placeholder="Enter room ID"
+              />
+            </div>
+
+            <button type="button" onClick={handleJoinGame}>Join Game</button>
           </div>
-
-          <button type="button" onClick={handleJoinGame}>Join Game</button>
-        </div>
+        )}
       </div>
     </div>
   );
