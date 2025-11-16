@@ -27,6 +27,7 @@
 	border-radius: 5%;
 	padding: 30px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	background-color: rgba(255, 255, 255, 0.9);
 }
 
 .field {
@@ -77,3 +78,4 @@ body{
     background-attachment: fixed;
     background-size: cover;
 }	
+
