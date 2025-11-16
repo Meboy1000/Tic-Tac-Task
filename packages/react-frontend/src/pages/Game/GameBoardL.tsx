@@ -178,7 +178,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
                         )}
                       </div>
                     ) : (
-                      'No task yet'
+                      <i> No task yet </i>
                     )}
                   </div>
                 </div>
@@ -193,7 +193,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
                         )}
                       </div>
                     ) : (
-                      'No task yet'
+                      <i> No task yet </i>
                     )}
                   </div>
                 </div>
