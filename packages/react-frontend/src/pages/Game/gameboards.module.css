@@ -6,6 +6,118 @@
   align-items: center;
   padding: 1rem;
   position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.container.darkMode {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.container.darkMode .header {
+  background: transparent;
+}
+
+.container.darkMode .title {
+  color: #ffffff;
+}
+
+.container.darkMode .svgBackground {
+  opacity: 0.2;
+}
+
+.container.darkMode .board {
+  background: #2a2a2a;
+  box-shadow: 0 0 0 2px #555;
+}
+
+.container.darkMode .cell {
+  background: #2a2a2a;
+  border-color: #555;
+}
+
+.container.darkMode .taskDisplay {
+  background: #1a1a1a;
+  border-color: #555;
+  color: #ffffff;
+}
+
+.container.darkMode .taskLabel {
+  color: #ffffff;
+}
+
+.container.darkMode .playerBtn {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.container.darkMode .playerBtn:hover {
+  background-color: #ffffff;
+}
+
+.container.darkMode .clearAllBtn {
+  background-color: #cf3836;
+  color: #000000;
+}
+
+.container.darkMode .clearAllBtn:hover {
+  background-color: #ff9999;
+}
+
+.container.darkMode .clearBoardMarksBtn {
+  background-color: #e7a23a;
+  color: #000000;
+}
+
+.container.darkMode .clearBoardMarksBtn:hover {
+  background-color: #ebbe91;
+}
+
+.container.darkMode .menuBtn {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.container.darkMode .menuBtn:hover {
+  background-color: #ffffff;
+}
+
+.container.darkMode .logoutBtn {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.container.darkMode .logoutBtn:hover {
+  background-color: #ff0000;
+}
+
+.container.darkMode .popupContent {
+  background: #2a2a2a;
+  border-color: #555;
+  color: #ffffff;
+}
+
+.container.darkMode .popupContent h2 {
+  color: #ffffff;
+}
+
+.container.darkMode .taskEntry label,
+.container.darkMode .timeEntry label,
+.container.darkMode .menuOption label {
+  color: #ffffff;
+}
+
+.container.darkMode .taskInputGroup input[type="text"],
+.container.darkMode .timeInput,
+.container.darkMode .timeEntry input {
+  background: #1a1a1a;
+  border-color: #555;
+  color: #ffffff;
+}
+
+.container.darkMode .menuOption {
+  background: #1a1a1a;
+  border-color: #555;
 }
 
 .svgBackground {
@@ -44,6 +156,7 @@
   color: black;
   text-align: center;
   flex: 1;
+  margin: 0;
 }
 
 .logoutBtn {
@@ -58,6 +171,21 @@
 
 .logoutBtn:hover {
   background-color: #333;
+}
+
+.menuBtn {
+  padding: 0.5rem 1rem;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.menuBtn:hover {
+  background-color: #666;
 }
 
 .setupButtons {
@@ -78,44 +206,11 @@
   cursor: pointer;
   font-weight: 500;
   font-size: 1rem;
+  border-radius: 0.5rem;
 }
 
 .playerBtn:hover {
-  background-color: #333;
-}
-
-.timeBtn {
-  padding: 0.75rem 1.5rem;
-  background-color: #555;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 1rem;
-}
-
-.timeBtn:hover {
-  background-color: #666;
-}
-
-.timeDisplay {
-  font-size: 1rem;
-  font-weight: bold;
-  color: black;
-}
-
-.clearTimeBtn {
-  padding: 0.5rem 1rem;
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.clearTimeBtn:hover {
-  background-color: #c9302c;
+  background-color: #43be2a;
 }
 
 .clearAllBtn {
@@ -126,10 +221,26 @@
   cursor: pointer;
   font-weight: 500;
   font-size: 1rem;
+  border-radius: 0.5rem;
 }
 
 .clearAllBtn:hover {
   background-color: #c9302c;
+}
+
+.clearBoardMarksBtn {
+  padding: 0.75rem 1.5rem;
+  background-color: #f0ad4e;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+.clearBoardMarksBtn:hover {
+  background-color: #ec971f;
 }
 
 .boardContainer {
@@ -160,6 +271,7 @@
   border: 2px solid black;
   background: white;
   min-height: 150px;
+  position: relative;
 }
 
 .taskGroup {
@@ -181,6 +293,24 @@
   font-size: 0.875rem;
   min-height: 2rem;
 }
+
+.taskContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.taskName {
+  font-weight: 500;
+}
+
+.timeEstimate {
+  font-size: 0.75rem;
+  color: #666;
+  font-style: italic;
+}
+
+
 
 /* Popup styles */
 .popup {
@@ -230,11 +360,24 @@
   font-size: 0.9rem;
 }
 
-.taskEntry input {
+.taskInputGroup {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.taskInputGroup input[type="text"] {
+  flex: 1;
   padding: 0.5rem;
   border: 2px solid black;
   font-size: 1rem;
-  width: 100%;
+}
+
+.timeInput {
+  width: 80px;
+  padding: 0.5rem;
+  border: 2px solid black;
+  font-size: 1rem;
 }
 
 .timeEntry {
@@ -269,6 +412,7 @@
   border: none;
   cursor: pointer;
   font-weight: bold;
+  border-radius: 0.5rem;
 }
 
 .saveBtn:hover {
@@ -282,8 +426,90 @@
   border: none;
   cursor: pointer;
   font-weight: bold;
+  border-radius: 0.5rem;
 }
 
 .cancelBtn:hover {
+  background-color: #777;
+}
+
+.markOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.mark {
+  font-size: 9rem;
+  font-weight: bold;
+  color: rgb(255, 0, 0);
+  user-select: none;
+  pointer-events: none;
+}
+
+.menuOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.menuOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+}
+
+.menuOption label {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.toggleBtn {
+  padding: 0.5rem 1rem;
+  background-color: #999;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 0.375rem;
+  min-width: 60px;
+  transition: background-color 0.3s ease;
+}
+
+.toggleBtn.active {
+  background-color: #5cb85c;
+}
+
+.toggleBtn:hover {
+  background-color: #777;
+}
+
+.toggleBtn.active:hover {
+  background-color: #4cae4c;
+}
+
+.closeBtn {
+  padding: 0.75rem 1.5rem;
+  background-color: #999;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 0.5rem;
+}
+
+.closeBtn:hover {
   background-color: #777;
 }
