@@ -168,7 +168,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
                   <div className={styles.mark}>{getMark(index)}</div>
                 </div>
                 <div className={styles.taskGroup}>
-                  <label className={styles.taskLabel}>Player 1:</label>
+                  <label className={styles.taskLabel1}>Player 1:</label>
                   <div className={styles.taskDisplay}>
                     {p1Task.name ? (
                       <div className={styles.taskContent}>
@@ -183,7 +183,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
                   </div>
                 </div>
                 <div className={styles.taskGroup}>
-                  <label className={styles.taskLabel}>Player 2:</label>
+                  <label className={styles.taskLabel2}>Player 2:</label>
                   <div className={styles.taskDisplay}>
                     {p2Task.name ? (
                       <div className={styles.taskContent}>
