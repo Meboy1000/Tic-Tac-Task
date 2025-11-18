@@ -33,6 +33,10 @@ app.get("/", (req, res) => {
   res.send("Hello, can anyone hear me?");
 });
 
+app.listen(process.env.PORT || port, () => {
+  console.log("REST API is listening.");
+});
+
 // Fetch all users
 app.get("/users", async (req, res) => {
   try {
@@ -71,9 +75,7 @@ app.post("/users", async (req, res) => {
     res.status(500).send("Error saving user");
   }
 });
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+
 
 // Delete user with an id
 app.delete("/users/:id", async (req, res) => {
@@ -223,3 +225,4 @@ app.delete("/tasks/:userId/:matchId/:location", async (req, res) => {
     res.status(500).send("Error deleting task");
   }
 });
+
