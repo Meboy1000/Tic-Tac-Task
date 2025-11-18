@@ -1,8 +1,7 @@
 name: CI Testing
 
 on:
-  push:
-    branches: [main, CI/CD]
+  push
 
 jobs:
   build:
