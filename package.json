@@ -9,7 +9,7 @@
     "dev:backend": "npm run dev -w express-backend",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "test": "echo \"Error: no test specified\"",
-    "lint": "eslint .",
+    "lint": "npx eslint . && npx prettier --check .",
     "format": "prettier --write ."
   },
   "author": "JavierMB",
