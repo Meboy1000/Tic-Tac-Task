@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styles from './gameboards.module.css';
 
-interface Task {
-  name: string;
-  timeEstimate: number; // in minutes
-}
-
-interface GameBoardProps {
-  onLogout: () => void;
-  currentPlayerId?: number; // 1 or 2, passed from parent to identify logged-in player
-}
-
-export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardProps) {
-  const [player1Tasks, setPlayer1Tasks] = useState<Task[]>(Array(9).fill({ name: '', timeEstimate: 0 }));
-  const [player2Tasks, setPlayer2Tasks] = useState<Task[]>(Array(9).fill({ name: '', timeEstimate: 0 }));
+export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
+  const [player1Tasks, setPlayer1Tasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
+  const [player2Tasks, setPlayer2Tasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
   const [showPopup, setShowPopup] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState<number>(currentPlayerId);
-  const [tempTasks, setTempTasks] = useState<Task[]>(Array(9).fill({ name: '', timeEstimate: 0 }));
+  const [currentPlayer, setCurrentPlayer] = useState(currentPlayerId);
+  const [tempTasks, setTempTasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
   const [tasksSubmitted, setTasksSubmitted] = useState(false);
-  const [cellMarks, setCellMarks] = useState<(0 | 1 | 2)[]>(Array(9).fill(0)); // 0 = empty, 1 = X (Player 1), 2 = O (Player 2)
+  const [cellMarks, setCellMarks] = useState(Array(9).fill(0)); // 0 = empty, 1 = X (Player 1), 2 = O (Player 2)
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenuPopup, setShowMenuPopup] = useState(false);
 
@@ -33,7 +23,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
     }
   }, []);
 
-  const openPlayerPopup = (player: number) => {
+  const openPlayerPopup = (player) => {
     setCurrentPlayer(player);
     setTempTasks(Array(9).fill({ name: '', timeEstimate: 0 }));
     setShowPopup(true);
@@ -63,7 +53,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
     alert(`Tasks submitted for Player ${currentPlayer}!`);
   };
 
-  const updateTempTask = (index: number, name: string, timeEstimate?: number) => {
+  const updateTempTask = (index, name, timeEstimate) => {
     const newTasks = [...tempTasks];
     newTasks[index] = {
       name: name !== undefined ? name : newTasks[index].name,
@@ -84,13 +74,13 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
   };
    
 
-  const handleCellClick = (index: number) => {
+  const handleCellClick = (index) => {
     const newMarks = [...cellMarks];
     const currentMark = newMarks[index];
     
     // if cell is empty, mark it with current player
     if (currentMark === 0) {
-      newMarks[index] = currentPlayerId as (1 | 2);
+      newMarks[index] = currentPlayerId;
     }
     // if cell is marked by current player, clear it
     else if (currentMark === currentPlayerId) {
@@ -104,7 +94,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }: GameBoardPr
     setCellMarks(newMarks);
   };
 
-  const getMark = (index: number) => {
+  const getMark = (index) => {
     const mark = cellMarks[index];
     if (mark === 1) return 'x';
     if (mark === 2) return 'o';
