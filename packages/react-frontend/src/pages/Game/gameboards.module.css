@@ -279,11 +279,15 @@
   gap: 0.5rem;
 }
 
-.taskLabel {
+.taskLabel1 {
   font-size: 125%;
   font-weight: bold;
-  color: black;
-
+  color: rgb(167, 199, 231);
+}
+.taskLabel2 {
+  font-size: 125%;
+  font-weight: bold;
+  color: rgb(231,167,167);
 }
 
 .taskDisplay {

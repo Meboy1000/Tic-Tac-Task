@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import LandingPagePreview from "./pages/Landing/landPage";
-import GameBoard from "./pages/Game/GameBoardL";
+import LandingPagePreview from "./pages/Landing/landPage.jsx";
+import GameBoard from "./pages/Game/GameBoardL.jsx";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentPlayerId, setCurrentPlayerId] = useState<number>(1); // Track which player is logged in
+  const [currentPlayerId, setCurrentPlayerId] = useState(1); // track which player is logged in
 
-  const handleLogin = (playerId: number = 1) => {
+  const handleLogin = (playerId = 1) => {
     setCurrentPlayerId(playerId);
     setIsLoggedIn(true);
   };

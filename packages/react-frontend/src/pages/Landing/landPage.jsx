@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import styles from "./landPage.module.css";
 
-interface LandingPageProps {
-  onLogin: () => void;
-}
-
-export default function LandingPagePreview({ onLogin }: LandingPageProps) {
+export default function LandingPagePreview({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [roomId, setRoomId] = useState('');
@@ -68,14 +64,16 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
             onClick={() => setShowJoinSection(!showJoinSection)}
             style={{ marginTop: "20px" }}
           >
-            {showJoinSection ? "Hide Join Game" : "Join Game"}
+            Join Game
           </button>
         </div>
+      </div>
 
-        {/* JOIN GAME SECTION (only visible if showJoinSection = true) */}
-        {showJoinSection && (
-          <div className={styles.login}>
-            <h4>Join a Game</h4>
+      {/* JOIN GAME POPUP (modal) */}
+      {showJoinSection && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent}>
+            <h2>Join a Game</h2>
 
             <div className={styles.field}>
               <label htmlFor="roomId">Room ID:</label>
@@ -88,10 +86,13 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
               />
             </div>
 
-            <button type="button" onClick={handleJoinGame}>Join Game</button>
+            <div className={styles.popupButtons}>
+              <button type="button" onClick={handleJoinGame} className={styles.saveBtn}>Join Game</button>
+              <button type="button" onClick={() => setShowJoinSection(false)} className={styles.cancelBtn}>Cancel</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
