@@ -22,8 +22,8 @@ export async function getUserById(id) {
   return data?.[0] || null;
 }
 
-// fund user by username, used for login
-export async function findUserByName(name) {
+// find user by username, used for login
+export async function getUserByName(name) {
     const {data, error} = await supabase.rpc('get_user_by_name', {user_name: name});
     if (error) {
         console.error('Error fetching user:', error.message);
@@ -31,7 +31,6 @@ export async function findUserByName(name) {
     }
     return data?.[0] || null;
 }
-
 
 // Add new user
 export async function addUser({ username, password }) {

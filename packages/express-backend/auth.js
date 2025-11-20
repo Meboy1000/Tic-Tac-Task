@@ -4,15 +4,16 @@ import {
   getAllUsers,
   getUserById,
   addUser,
-  deleteUserById
+  deleteUserById,
+  getUserByName
 } from "./user.js";
 
-export function registerUser(req, res) {
+export async function registerUser(req, res) {
   const { username, pwd } = req.body; // from form
 
   if (!username || !pwd) {
     res.status(400).send("Bad request: Invalid input data.");
-  } else if (creds.find((c) => c.username === username)) {
+  } else if (getUserByName(username)) {
     res.status(409).send("Username already taken");
   } else {
     bcrypt
@@ -34,10 +35,10 @@ export function registerUser(req, res) {
   }
 }
 
-function generateAccessToken(username) {
+function generateAccessToken(id) {
   return new Promise((resolve, reject) => {
     jwt.sign(
-      { username: username },
+      { id: id },
       process.env.TOKEN_SECRET,
       { expiresIn: "1d" },
       (error, token) => {
@@ -65,6 +66,7 @@ export function authenticateUser(req, res, next) {
       process.env.TOKEN_SECRET,
       (error, decoded) => {
         if (decoded) {
+          req.body.id = decoded.id;
           next();
         } else {
           console.log("JWT error:", error);
@@ -75,21 +77,19 @@ export function authenticateUser(req, res, next) {
   }
 }
 
-export function loginUser(req, res) {
+export async function loginUser(req, res) {
   const { username, pwd } = req.body; // from form
-  const retrievedUser = creds.find(
-    (c) => c.username === username
-  );
+  const retrievedUser = await getUserByName(username);
 
   if (!retrievedUser) {
     // invalid username
     res.status(401).send("Unauthorized");
   } else {
     bcrypt
-      .compare(pwd, retrievedUser.hashedPassword)
+      .compare(pwd, retrievedUser.password)
       .then((matched) => {
         if (matched) {
-          generateAccessToken(username).then((token) => {
+          generateAccessToken(retrievedUser.id).then((token) => {
             res.status(200).send({ token: token });
           });
         } else {

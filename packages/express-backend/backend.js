@@ -22,6 +22,11 @@ import {
   markTaskComplete,
   deleteTask
 } from "./task.js";
+import {
+    registerUser,
+    authenticateUser,
+    loginUser
+} from "./auth.js"
 
 const app = express();
 const port = 8000;
@@ -32,7 +37,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, can anyone hear me?");
 });
+app.post("/signup", registerUser);
 
+app.post("/login", loginUser);
+/*
 // Fetch all users
 app.get("/users", async (req, res) => {
   try {
@@ -71,6 +79,7 @@ app.post("/users", async (req, res) => {
     res.status(500).send("Error saving user");
   }
 });
+*/
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
