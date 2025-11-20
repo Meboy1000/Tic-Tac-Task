@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "This will be an app for the csc 307 class",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "npm run dev -w react-frontend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:frontend": "npm run dev -w react-frontend",
+    "dev:backend": "npm run dev -w express-backend",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "test": "echo \"Error: no test specified\"",
+    "lint": "npx eslint . && npx prettier --check .",
+    "format": "prettier --write ."
   },
   "author": "JavierMB",
   "license": "ISC",
@@ -13,6 +18,16 @@
     "packages/*"
   ],
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@eslint/js": "^9.39.1",
+    "concurrently": "^8.2.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
   }
 }
