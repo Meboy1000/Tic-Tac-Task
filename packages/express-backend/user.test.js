@@ -2,7 +2,7 @@ import {expect} from "@jest/globals";
 import {
   getAllUsers,
   getUserById,
-  findUserByName,
+  getUserByName,
   addUser,
   deleteUserById
 } from './user.js';
@@ -95,14 +95,14 @@ describe('User tests', () => {
     });
 });
 
-  //findUserByName
-  describe('findUserByName', () => {
+  //getUserByName
+  describe('getUserByName', () => {
     it('returns user when found', async () => {
       supabase.rpc.mockResolvedValue({
         data: [{id: 50, name: 'mickey'}],
         error: null
       });
-      const res = await findUserByName('mickey');
+      const res = await getUserByName('mickey');
       expect(res).toEqual({ 
         id: 50, 
         name: 'mickey' 
@@ -115,7 +115,7 @@ describe('User tests', () => {
         data: [], 
         error: null 
       });
-      const res = await findUserByName('kevin');
+      const res = await getUserByName('kevin');
       expect(res).toBeNull();
     });
 
@@ -124,7 +124,7 @@ describe('User tests', () => {
         data: null, 
         error: null 
       });
-      const res = await findUserByName('kevin');
+      const res = await getUserByName('kevin');
       expect(res).toBeNull();
     });
 
@@ -134,7 +134,7 @@ describe('User tests', () => {
         data: null, 
         error: err 
       });
-      await expect(findUserByName('kevin')).rejects.toEqual(err);
+      await expect(getUserByName('kevin')).rejects.toEqual(err);
     });
   });
 

@@ -24,7 +24,6 @@ import {
 } from "./task.js";
 import {
     registerUser,
-    authenticateUser,
     loginUser
 } from "./auth.js"
 
