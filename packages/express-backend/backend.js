@@ -24,17 +24,12 @@ import {
 } from "./task.js";
 
 const app = express();
-const port = 8000;
 
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello, can anyone hear me?");
-});
-
-app.listen(process.env.PORT || port, () => {
-  console.log("REST API is listening.");
 });
 
 // Fetch all users
@@ -226,3 +221,4 @@ app.delete("/tasks/:userId/:matchId/:location", async (req, res) => {
   }
 });
 
+export default app;
