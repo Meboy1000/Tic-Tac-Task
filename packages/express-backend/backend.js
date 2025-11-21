@@ -22,6 +22,11 @@ import {
   markTaskComplete,
   deleteTask
 } from "./task.js";
+import {
+    registerUser,
+    authenticateUser,
+    loginUser
+} from "./auth.js"
 
 const app = express();
 const port = 8000;
@@ -32,10 +37,16 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, can anyone hear me?");
 });
+app.post("/signup", registerUser);
+
+
+app.post("/login", loginUser);
+
 
 app.listen(process.env.PORT || port, () => {
   console.log("REST API is listening.");
 });
+
 
 // Fetch all users
 app.get("/users", async (req, res) => {
@@ -75,7 +86,6 @@ app.post("/users", async (req, res) => {
     res.status(500).send("Error saving user");
   }
 });
-
 
 // Delete user with an id
 app.delete("/users/:id", async (req, res) => {
