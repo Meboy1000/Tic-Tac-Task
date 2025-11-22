@@ -24,12 +24,10 @@ import {
 } from "./task.js";
 import {
     registerUser,
-    authenticateUser,
     loginUser
 } from "./auth.js"
 
 const app = express();
-const port = 8000;
 
 app.use(cors());
 app.use(express.json());
@@ -236,3 +234,4 @@ app.delete("/tasks/:userId/:matchId/:location", async (req, res) => {
   }
 });
 
+export default app;
