@@ -11,6 +11,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
   const [cellMarks, setCellMarks] = useState(Array(9).fill(0)); // 0 = empty, 1 = X (Player 1), 2 = O (Player 2)
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenuPopup, setShowMenuPopup] = useState(false);
+  const [stakes, setStakes] = useState('');
 
   useEffect(() => {
     // set current player based on prop
@@ -144,7 +145,22 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
         </button>
         <button onClick={clearAllTasks} className={styles.clearAllBtn}>Clear All Tasks</button>
         <button onClick={clearBoardMarks} className={styles.clearBoardMarksBtn}>Clear Board Marks</button>
+
+        {/* NEW: Stakes input */}
+        <div className={styles.stakesInputGroup}>
+          <label className={styles.stakesLabel}>Stakes: $</label>
+          <input
+            type="number"
+            min="0"
+            value={stakes}
+            onChange={(e) => setStakes(e.target.value)}
+            className={styles.stakesInput}
+            placeholder="$"
+          />
+        </div>
       </div>
+
+      
 
       <div className={styles.boardContainer}>
         <div className={styles.board}>
