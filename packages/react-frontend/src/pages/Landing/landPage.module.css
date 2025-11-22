@@ -144,12 +144,12 @@
 
 .cancelBtn:hover {
 	background-color: #777;
-}
+}	
 
 body{
-    background-image: url(tic-tac-task-landing-background.jpeg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    background-size: cover;
-}	
+    background-image: url(land-page-background.jpeg);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+	background-size: cover;
+}
