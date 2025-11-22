@@ -40,6 +40,10 @@
   border-color: #555;
 }
 
+.container.darkMode .cell.marked {
+  background: rgba(76, 175, 80, 0.25);
+}
+
 .container.darkMode .taskDisplay {
   background: #1a1a1a;
   border-color: #555;
@@ -271,6 +275,11 @@
   background: white;
   min-height: 150px;
   position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.cell.marked {
+  background: rgba(76, 175, 80, 0.15);
 }
 
 .taskGroup {
