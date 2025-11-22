@@ -27,7 +27,7 @@ export default function LandingPagePreview({ onLogin }) {
   return (
     <div className={styles.container}>
       <div>
-        <h3 className={styles.title}>Tic-Tac-Task</h3>
+        <h3 className={styles.title}>Tic Tac Task</h3>
       </div>
 
       <div className={styles.loginContainer}>
