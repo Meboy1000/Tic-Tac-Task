@@ -22,14 +22,15 @@ export default function LandingPagePreview({ onLogin }) {
       onLogin();
     }
   };
-
-
+  
+  // Connected CSS styling for titles, containers, etc. (ex. {styles.container})
   return (
     <div className={styles.container}>
       <div>
         <h3 className={styles.title}>Tic Tac Task</h3>
       </div>
-
+      
+      
       <div className={styles.loginContainer}>
         <div className={styles.login}>
           <div className={styles.field}>
