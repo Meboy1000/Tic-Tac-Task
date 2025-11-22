@@ -72,7 +72,6 @@ export default function LandingPagePreview({ onLogin }: LandingPageProps) {
           </button>
         </div>
 
-        {/* JOIN GAME SECTION (only visible if showJoinSection = true) */}
         {showJoinSection && (
           <div className={styles.login}>
             <h4>Join a Game</h4>
