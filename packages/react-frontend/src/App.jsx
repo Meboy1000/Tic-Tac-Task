@@ -13,7 +13,7 @@ function App() {
 
   if (!isLoggedIn) {
     // connected this component to render the LandingPagePreview (title page) 
-    // Topics: Passing props -> components -> render components 
+    // Topics: Passing props -> components -> render components   
     return <LandingPagePreview onLogin={() => handleLogin(1)} />;
     
   }
