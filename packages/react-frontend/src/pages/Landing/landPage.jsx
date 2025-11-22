@@ -27,13 +27,13 @@ export default function LandingPagePreview({ onLogin }) {
   return (
     <div className={styles.container}>
       <div>
-        <h3 className={styles.title}>Tic Tac Task</h3>
+        <h3 className={styles.title}>Tic-Tac-Task</h3>
       </div>
 
       <div className={styles.loginContainer}>
         <div className={styles.login}>
           <div className={styles.field}>
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="username">Username: </label>
             <input
               id="username"
               name="username"
@@ -45,7 +45,7 @@ export default function LandingPagePreview({ onLogin }) {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="password">Password:</label>
+            <label htmlFor="password">Password: </label>
             <input
               id="password"
               name="password"
@@ -64,7 +64,7 @@ export default function LandingPagePreview({ onLogin }) {
             onClick={() => setShowJoinSection(!showJoinSection)}
             style={{ marginTop: "20px" }}
           >
-            Join Game
+            Join Game 
           </button>
         </div>
       </div>
@@ -75,7 +75,7 @@ export default function LandingPagePreview({ onLogin }) {
             <h2>Join a Game</h2>
 
             <div className={styles.field}>
-              <label htmlFor="roomId">Room ID:</label>
+              <label htmlFor="roomId">Room ID: </label>
               <input
                 id="roomId"
                 type="text"
