@@ -20,7 +20,7 @@ export async function registerUser(req, res) {
       .genSalt(10)
       .then((salt) => bcrypt.hash(pwd, salt))
       .then((hashedPassword) => {
-        generateAccessToken(username).then((token) => {
+        generateAccessToken(username).then(async (token) => {
           console.log("Token:", token);
           res.status(201).send({ token: token });
           try {

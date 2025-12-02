@@ -41,7 +41,7 @@ app.post("/signup", registerUser);
 app.post("/login", loginUser);
 
 
-app.listen(process.env.PORT || port, () => {
+app.listen(process.env.PORT, () => {
   console.log("REST API is listening.");
 });
 
