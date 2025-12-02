@@ -1,17 +1,17 @@
 import BASE_URL from "../api/api";
 
-export async function fetchMatchById(id: string) {
+export async function getMatchById(id: string) {
   const res = await fetch(`${BASE_URL}/matches/${id}`);
   if (!res.ok) throw new Error("Match not found");
   return res.json();
 }
 
-export async function fetchMatchesForUser(userId: string) {
+export async function getMatchesForUser(userId: string) {
   const res = await fetch(`${BASE_URL}/matches/user/${userId}`);
   return res.json();
 }
 
-export async function createMatch(match: any) {
+export async function addMatch(match: any) {
   const res = await fetch(`${BASE_URL}/matches`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

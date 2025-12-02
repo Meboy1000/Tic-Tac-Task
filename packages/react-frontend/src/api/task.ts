@@ -1,17 +1,17 @@
 import BASE_URL from "../api/api";
 
-export async function fetchTask(userId: number, matchId: number, location: number) {
+export async function getTask(userId: number, matchId: number, location: number) {
   const res = await fetch(`${BASE_URL}/tasks/${userId}/${matchId}/${location}`);
   if (!res.ok) throw new Error("Task not found");
   return res.json();
 }
 
-export async function fetchTasksForUserMatch(userId: number, matchId: number) {
+export async function getTasksForUserMatch(userId: number, matchId: number) {
   const res = await fetch(`${BASE_URL}/tasks/user/${userId}/match/${matchId}`);
   return res.json();
 }
 
-export async function createTask(task: any) {
+export async function addTask(task: any) {
   const res = await fetch(`${BASE_URL}/tasks`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

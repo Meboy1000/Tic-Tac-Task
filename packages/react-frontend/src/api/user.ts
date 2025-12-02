@@ -1,17 +1,17 @@
 import BASE_URL from "../api/api";
 
-export async function fetchUsers() {
+export async function getAllUsers() {
   const res = await fetch(`${BASE_URL}/users`);
   return res.json();
 }
 
-export async function fetchUserById(id: string) {
+export async function getUserById(id: string) {
   const res = await fetch(`${BASE_URL}/users/${id}`);
   if (!res.ok) throw new Error("User not found");
   return res.json();
 }
 
-export async function createUser(user: any) {
+export async function addUser(user: any) {
   const res = await fetch(`${BASE_URL}/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
