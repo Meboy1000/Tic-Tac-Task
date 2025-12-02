@@ -13,9 +13,11 @@
   "author": "Javi",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "mongoose": "^8.19.1"
+    "mongoose": "^8.19.1",
+    "express": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
