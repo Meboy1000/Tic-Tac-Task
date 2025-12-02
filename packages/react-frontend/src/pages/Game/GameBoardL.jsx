@@ -4,13 +4,14 @@ import styles from './gameboards.module.css';
 export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
   const [player1Tasks, setPlayer1Tasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
   const [player2Tasks, setPlayer2Tasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
-  const [showPopup, setShowPopup] = useState(false);
-  const [currentPlayer, setCurrentPlayer] = useState(currentPlayerId);
-  const [tempTasks, setTempTasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
+  const [showPopup, setShowPopup] = useState(false); //slots for showing task entry popup
+  const [currentPlayer, setCurrentPlayer] = useState(currentPlayerId); //1 or 2
+  const [tempTasks, setTempTasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));//temporary tasks before submission
   const [tasksSubmitted, setTasksSubmitted] = useState(false);
-  const [cellMarks, setCellMarks] = useState(Array(9).fill(0)); // 0 = empty, 1 = X (Player 1), 2 = O (Player 2)
+  const [cellMarks, setCellMarks] = useState(Array(9).fill(0)); 
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenuPopup, setShowMenuPopup] = useState(false);
+  const [stakes, setStakes] = useState('');
 
   useEffect(() => {
     // set current player based on prop
@@ -46,18 +47,18 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
       setPlayer2Tasks([...tempTasks]);
     }
     
-    // Backend will handle where these tasks go
-    // For now, just close the popup
+    // backend will handle where these tasks go
+    // for now, just close the popup
     setShowPopup(false);
     setTasksSubmitted(true);
     alert(`Tasks submitted for Player ${currentPlayer}!`);
   };
 
-  const updateTempTask = (index, name, timeEstimate) => {
-    const newTasks = [...tempTasks];
+  const updateTempTask = (index, name, timeEstimate) => { //create temp task entry
+    const newTasks = [...tempTasks]; //new array to hold temp tasks
     newTasks[index] = {
-      name: name !== undefined ? name : newTasks[index].name,
-      timeEstimate: timeEstimate !== undefined ? timeEstimate : newTasks[index].timeEstimate,
+      name: name !== undefined ? name : newTasks[index].name, //if name provided use it else keep existing
+      timeEstimate: timeEstimate !== undefined ? timeEstimate : newTasks[index].timeEstimate, 
     };
     setTempTasks(newTasks);
   };
@@ -86,7 +87,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
     else if (currentMark === currentPlayerId) {
       newMarks[index] = 0;
     }
-    // if cell is marked by other player, don't allow change
+    // if cell is marked by other player don't allow change
     else {
       return;
     }
@@ -144,7 +145,22 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
         </button>
         <button onClick={clearAllTasks} className={styles.clearAllBtn}>Clear All Tasks</button>
         <button onClick={clearBoardMarks} className={styles.clearBoardMarksBtn}>Clear Board Marks</button>
+
+        {/* NEW: Stakes input */}
+        <div className={styles.stakesInputGroup}>
+          <label className={styles.stakesLabel}>Stakes: $</label>
+          <input
+            type="number"
+            min="0"
+            value={stakes}
+            onChange={(e) => setStakes(e.target.value)}
+            className={styles.stakesInput}
+            placeholder="$"
+          />
+        </div>
       </div>
+
+      
 
       <div className={styles.boardContainer}>
         <div className={styles.board}>
@@ -153,7 +169,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
             const p2Task = player2Tasks[index];
             
             return (
-              <div key={index} className={styles.cell}>
+              <div key={index} className={`${styles.cell} ${cellMarks[index] !== 0 ? styles.marked : ''}`}>
                 <div className={styles.markOverlay} onClick={() => handleCellClick(index)}>
                   <div className={styles.mark}>{getMark(index)}</div>
                 </div>

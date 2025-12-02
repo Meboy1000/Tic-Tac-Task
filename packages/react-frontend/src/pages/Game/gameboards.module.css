@@ -40,6 +40,10 @@
   border-color: #555;
 }
 
+.container.darkMode .cell.marked {
+  background: rgba(76, 175, 80, 0.25);
+}
+
 .container.darkMode .taskDisplay {
   background: #1a1a1a;
   border-color: #555;
@@ -271,6 +275,11 @@
   background: white;
   min-height: 150px;
   position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.cell.marked {
+  background: rgba(76, 175, 80, 0.15);
 }
 
 .taskGroup {
@@ -518,3 +527,25 @@
   background-color: #777;
 }
 
+.stakesInputGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: #ffffff;
+  border: 3px solid black;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.stakesLabel {
+  font-weight: bold;
+}
+
+.stakesInput {
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  border: 3px solid #000;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+}
