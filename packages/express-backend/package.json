@@ -2,22 +2,30 @@
   "name": "express-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "backend.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon backend.js",
-    "start": "node backend.js"
+    "test": "jest",
+    "dev": "npx nodemon server.js",
+    "start": "node server.js",
+    "lint": "eslint ."
   },
   "author": "Javi",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
     "mongoose": "^8.19.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@jest/globals": "^30.2.0",
+    "@supabase/supabase-js": "^2.79.0",
+    "babel-jest": "^30.2.0",
+    "express": "^5.1.0",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.11",
+    "supertest": "^7.1.4"
   }
 }
