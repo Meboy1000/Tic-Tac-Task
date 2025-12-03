@@ -12,6 +12,10 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenuPopup, setShowMenuPopup] = useState(false);
   const [stakes, setStakes] = useState('');
+  const [match, setMatch] = useState(null);
+  const [isWaitingForPlayer2, setIsWaitingForPlayer2] = useState(false);
+  const matchId = 1; // TODO: Replace with real match ID once landing page actually logs you in
+
 
   useEffect(() => {
     // set current player based on prop
@@ -23,6 +27,35 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
       setShowPopup(true);
     }
   }, []);
+
+useEffect(() => {
+  const POLL_INTERVAL = 3000; // 3 seconds
+
+  async function pollGameState() {
+    try {
+      const res = await fetch(`/poll-game-state?matchId=${matchId}&user1Id=${currentPlayerId}`);
+      const data = await res.json();
+
+      if (!data.success) return;
+
+      const { match, tasks } = data;
+      setMatch(match);
+
+      setIsWaitingForPlayer2(match.user2_id === null);
+
+      if (tasks.user1) setPlayer1Tasks(tasks.user1);
+      if (tasks.user2) setPlayer2Tasks(tasks.user2);
+
+    } catch (err) {
+      console.error("Polling failed:", err);
+    }
+  }
+
+  pollGameState(); // initial fetch
+  const intervalId = setInterval(pollGameState, POLL_INTERVAL);
+
+  return () => clearInterval(intervalId);
+}, [currentPlayerId]);
 
   const openPlayerPopup = (player) => {
     setCurrentPlayer(player);

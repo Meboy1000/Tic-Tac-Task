@@ -35,16 +35,52 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, can anyone hear me?");
 });
-app.post("/signup", registerUser);
 
+// Game state polling endpoint
+app.get("/poll-game-state", async (req, res) => {
+  try {
+    const { matchId, user1Id, user2Id } = req.query;
 
-app.post("/login", loginUser);
+    if (!matchId || !user1Id) {
+      return res.status(400).send("matchId and user1Id are required");
+    }
 
+    // Fetch the match details
+    const match = await getMatchById(Number(matchId));
 
-app.listen(process.env.PORT, () => {
-  console.log("REST API is listening.");
+    if (!match) {
+      return res.status(404).send("Match not found");
+    }
+
+    // Fetch tasks for both users
+    const user1Tasks = await getTasksForUserMatch(Number(user1Id), Number(matchId));
+
+    let user2Tasks = [];
+    if (user2Id) {
+      user2Tasks = await getTasksForUserMatch(Number(user2Id), Number(matchId));
+    }
+    else if (match.user2_id) {
+      user2Tasks = await getTasksForUserMatch(Number(match.user2_id), Number(matchId));
+    }
+
+    res.json({
+      success: true,
+      match,
+      tasks: {
+        user1: user1Tasks,
+        user2: user2Tasks
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error in polling game state");
+  }
 });
 
+app.post("/signup", registerUser);
+
+app.post("/login", loginUser);
 
 // Fetch all users
 app.get("/users", async (req, res) => {
