@@ -5,13 +5,13 @@ export async function getAllUsers() {
   return res.json();
 }
 
-export async function getUserById(id: string) {
+export async function getUserById(id) {
   const res = await fetch(`${BASE_URL}/users/${id}`);
   if (!res.ok) throw new Error("User not found");
   return res.json();
 }
 
-export async function addUser(user: any) {
+export async function addUser(user) {
   const res = await fetch(`${BASE_URL}/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -21,7 +21,7 @@ export async function addUser(user: any) {
   return res.json();
 }
 
-export async function deleteUserById(id: string) {
+export async function deleteUserById(id) {
   const res = await fetch(`${BASE_URL}/users/${id}`, { method: "DELETE" });
   if (!res.ok) throw new Error("User not found");
   return true;
