@@ -38,17 +38,44 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
     }
   };
 
-  // load existing tasks from backend when component mounts and poll for updates
   useEffect(() => {
-    if (matchId && user1Id) {
-      loadAllTasks();
-      // Poll for updates every 3 seconds
-      const interval = setInterval(() => {
-        loadAllTasks();
-      }, 3000);
-      return () => clearInterval(interval);
+    if (!matchId) return;
+
+    const POLL_INTERVAL = 3000;
+
+    async function poll() {
+      try {
+        const [match, tasks] = await Promise.all([
+          getMatchById(matchId),
+          getTasksForMatch(matchId)
+        ]);
+
+        setMatch(match);
+
+        const p1 = Array(9).fill({ name: "", timeEstimate: 0 });
+        const p2 = Array(9).fill({ name: "", timeEstimate: 0 });
+
+        tasks.tasks.forEach(task => {
+          const obj = {
+            name: task.description || "",
+            timeEstimate: task.time_to_do || 0
+          };
+          if (task.user_id === match.user1_id) p1[task.location] = obj;
+          if (task.user_id === match.user2_id) p2[task.location] = obj;
+        });
+
+        setPlayer1Tasks(p1);
+        setPlayer2Tasks(p2);
+
+      } catch (err) {
+        console.error("Polling failed:", err);
+      }
     }
-  }, [matchId, user1Id, user2Id]);
+
+    poll();
+    const id = setInterval(poll, 3000);
+    return () => clearInterval(id);
+  }, [matchId]);
 
   const loadAllTasks = async () => {
     try {
@@ -110,35 +137,6 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
       setShowPopup(true);
     }
   }, [currentPlayerId, tasksSubmitted]);
-
-useEffect(() => {
-  const POLL_INTERVAL = 3000; // 3 seconds
-
-  async function pollGameState() {
-    try {
-      const res = await fetch(`/poll-game-state?matchId=${matchId}&user1Id=${currentPlayerId}`);
-      const data = await res.json();
-
-      if (!data.success) return;
-
-      const { match, tasks } = data;
-      setMatch(match);
-
-      setIsWaitingForPlayer2(match.user2_id === null);
-
-      if (tasks.user1) setPlayer1Tasks(tasks.user1);
-      if (tasks.user2) setPlayer2Tasks(tasks.user2);
-
-    } catch (err) {
-      console.error("Polling failed:", err);
-    }
-  }
-
-  pollGameState(); // initial fetch
-  const intervalId = setInterval(pollGameState, POLL_INTERVAL);
-
-  return () => clearInterval(intervalId);
-}, [currentPlayerId]);
 
   const openPlayerPopup = (player) => {
     setCurrentPlayer(player);
