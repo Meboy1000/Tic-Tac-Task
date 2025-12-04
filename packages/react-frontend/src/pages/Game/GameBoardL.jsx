@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from './gameboards.module.css';
+import { getTasksForUserMatch, getTasksForMatch, addTask, deleteTask } from '../../api/task';
+import { getMatchById } from '../../api/match';
 
-export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
+export default function GameBoard({ onLogout, currentPlayerId = 1, userId, matchId, username }) {
   const [player1Tasks, setPlayer1Tasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
   const [player2Tasks, setPlayer2Tasks] = useState(Array(9).fill({ name: '', timeEstimate: 0 }));
   const [showPopup, setShowPopup] = useState(false); //slots for showing task entry popup
@@ -12,6 +14,89 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenuPopup, setShowMenuPopup] = useState(false);
   const [stakes, setStakes] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [user1Id, setUser1Id] = useState(null);
+  const [user2Id, setUser2Id] = useState(null);
+
+  // load match details to get both user IDs
+  useEffect(() => {
+    if (matchId) {
+      loadMatchDetails();
+    }
+  }, [matchId]);
+
+  const loadMatchDetails = async () => {
+    try {
+      const match = await getMatchById(matchId);
+      console.log('Match details:', match);
+      setUser1Id(match.user1_id);
+      setUser2Id(match.user2_id);
+    } catch (error) {
+      console.error('Error loading match details:', error);
+    }
+  };
+
+  // load existing tasks from backend when component mounts and poll for updates
+  useEffect(() => {
+    if (matchId && user1Id) {
+      loadAllTasks();
+      // Poll for updates every 3 seconds
+      const interval = setInterval(() => {
+        loadAllTasks();
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [matchId, user1Id, user2Id]);
+
+  const loadAllTasks = async () => {
+    try {
+      const tasksData = await getTasksForMatch(matchId);
+      
+      // check if we got valid data
+      if (!tasksData || !tasksData.tasks) {
+        console.log('No tasks data received yet');
+        return;
+      }
+      
+      console.log('Loaded all tasks for match:', tasksData);
+      
+      // Separate tasks by user_id
+      const p1Tasks = Array(9).fill({ name: '', timeEstimate: 0 });
+      const p2Tasks = Array(9).fill({ name: '', timeEstimate: 0 });
+      
+      tasksData.tasks.forEach(task => {
+        if (task.location >= 0 && task.location < 9) {
+          const taskObj = {
+            name: task.description || '',
+            timeEstimate: task.time_to_do || 0
+          };
+          
+          if (task.user_id === user1Id) {
+            p1Tasks[task.location] = taskObj;
+          } else if (task.user_id === user2Id) {
+            p2Tasks[task.location] = taskObj;
+          }
+        }
+      });
+      
+      setPlayer1Tasks(p1Tasks);
+      setPlayer2Tasks(p2Tasks);
+      
+      // check if current user already has tasks
+      const myTasks = currentPlayerId === 1 ? p1Tasks : p2Tasks;
+      const hasTasks = myTasks.some(t => t.name);
+      setTasksSubmitted(hasTasks);
+    } catch (error) {
+      // silently log error to avoid infinite console spam
+      // only log once per minute
+      if (!window.lastTaskErrorLog || Date.now() - window.lastTaskErrorLog > 60000) {
+        console.error('Error loading tasks (will retry):', error.message);
+        window.lastTaskErrorLog = Date.now();
+      }
+    }
+  };
+
+  // Marks are local-only for now
 
   useEffect(() => {
     // set current player based on prop
@@ -22,7 +107,7 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
       setTempTasks(Array(9).fill({ name: '', timeEstimate: 0 }));
       setShowPopup(true);
     }
-  }, []);
+  }, [currentPlayerId, tasksSubmitted]);
 
   const openPlayerPopup = (player) => {
     setCurrentPlayer(player);
@@ -36,22 +121,40 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
     setShowPopup(true);
   };
 
-  const submitTasks = () => {
-    // TODO: Send tempTasks to backend for player currentPlayer
-    console.log(`Submitting tasks for Player ${currentPlayer}:`, tempTasks);
-    
-    // update the appropriate player's tasks
-    if (currentPlayer === 1) {
-      setPlayer1Tasks([...tempTasks]);
-    } else {
-      setPlayer2Tasks([...tempTasks]);
+  const submitTasks = async () => {
+    setIsLoading(true);
+    try {
+      // Save each task to the backend
+      const savePromises = tempTasks.map((task, index) => {
+        if (task.name) { // Only save tasks that have a name
+          return addTask({
+            user_id: userId,
+            match_id: matchId,
+            location: index,
+            description: task.name,
+            time_to_do: task.timeEstimate || 0,
+            complete: false
+          });
+        }
+        return null;
+      });
+      
+      await Promise.all(savePromises.filter(p => p !== null));
+      console.log(`Tasks saved to backend for Player ${currentPlayer}`);
+      
+      setShowPopup(false);
+      setTasksSubmitted(true);
+      
+      // Reload all tasks to get latest from both players
+      await loadAllTasks();
+      
+      alert(`Tasks submitted for Player ${currentPlayer}!`);
+    } catch (error) {
+      console.error('Error saving tasks:', error);
+      alert('Error saving tasks. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-    
-    // backend will handle where these tasks go
-    // for now, just close the popup
-    setShowPopup(false);
-    setTasksSubmitted(true);
-    alert(`Tasks submitted for Player ${currentPlayer}!`);
   };
 
   const updateTempTask = (index, name, timeEstimate) => { //create temp task entry
@@ -63,19 +166,74 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
     setTempTasks(newTasks);
   };
 
-  const clearAllTasks = () => {
-    setPlayer1Tasks(Array(9).fill({ name: '', timeEstimate: 0 }));
-    setPlayer2Tasks(Array(9).fill({ name: '', timeEstimate: 0 }));
-    console.log('All tasks cleared from board');
+  const clearAllTasks = async () => {
+    if (!window.confirm('Are you sure you want to clear all your tasks?')) {
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      // Delete all tasks for current user from backend
+      const deletePromises = [];
+      for (let i = 0; i < 9; i++) {
+        deletePromises.push(
+          deleteTask(userId, matchId, i).catch(err => {
+            // Ignore errors for tasks that don't exist
+            console.log(`No task at location ${i} to delete`);
+          })
+        );
+      }
+      
+      await Promise.all(deletePromises);
+      console.log('All my tasks cleared from backend');
+      
+      // Reload tasks to update UI
+      await loadAllTasks();
+      setTasksSubmitted(false);
+      
+      alert('Your tasks have been cleared!');
+    } catch (error) {
+      console.error('Error clearing tasks:', error);
+      alert('Error clearing tasks. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const clearBoardMarks = () => {
-    setCellMarks(Array(9).fill(0));
-    console.log('Board marks cleared');
+  const clearSingleTask = async (location) => {
+    if (!window.confirm(`Clear task at position ${location + 1}?`)) {
+      return;
+    }
+    
+    try {
+      await deleteTask(userId, matchId, location);
+      console.log(`Task at location ${location} deleted`);
+      
+      // Reload tasks to update UI
+      await loadAllTasks();
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('Error deleting task. It may not exist.');
+    }
+  };
+
+  const clearBoardMarks = async () => {
+    if (!window.confirm('Are you sure you want to clear all board marks (X/O)?')) {
+      return;
+    }
+    
+    try {
+      const emptyMarks = Array(9).fill(0);
+      setCellMarks(emptyMarks);
+      console.log('Board marks cleared');
+    } catch (error) {
+      console.error('Error clearing marks:', error);
+      alert('Error clearing board marks. Please try again.');
+    }
   };
    
 
-  const handleCellClick = (index) => {
+  const handleCellClick = async (index) => {
     const newMarks = [...cellMarks];
     const currentMark = newMarks[index];
     
@@ -92,7 +250,10 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
       return;
     }
     
+    // Update local state immediately for responsiveness
     setCellMarks(newMarks);
+
+    // No backend sync for marks right now
   };
 
   const getMark = (index) => {
@@ -143,7 +304,9 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
         <button onClick={openCurrentPlayerPopup} className={styles.playerBtn}>
           Add My Tasks
         </button>
-        <button onClick={clearAllTasks} className={styles.clearAllBtn}>Clear All Tasks</button>
+        <button onClick={clearAllTasks} className={styles.clearAllBtn} disabled={isLoading}>
+          {isLoading ? 'Clearing...' : 'Clear All My Tasks'}
+        </button>
         <button onClick={clearBoardMarks} className={styles.clearBoardMarksBtn}>Clear Board Marks</button>
 
         {/* NEW: Stakes input */}
@@ -182,6 +345,18 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
                         {p1Task.timeEstimate > 0 && (
                           <span className={styles.timeEstimate}>{p1Task.timeEstimate}min</span>
                         )}
+                        {currentPlayerId === 1 && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              clearSingleTask(index);
+                            }}
+                            className={styles.deleteTaskBtn}
+                            title="Delete this task"
+                          >
+                            ✕
+                          </button>
+                        )}
                       </div>
                     ) : (
                       <i> No task yet </i>
@@ -196,6 +371,18 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
                         <span className={styles.taskName}>{p2Task.name}</span>
                         {p2Task.timeEstimate > 0 && (
                           <span className={styles.timeEstimate}>{p2Task.timeEstimate}min</span>
+                        )}
+                        {currentPlayerId === 2 && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              clearSingleTask(index);
+                            }}
+                            className={styles.deleteTaskBtn}
+                            title="Delete this task"
+                          >
+                            ✕
+                          </button>
                         )}
                       </div>
                     ) : (
@@ -239,8 +426,12 @@ export default function GameBoard({ onLogout, currentPlayerId = 1 }) {
               ))}
             </div>
             <div className={styles.popupButtons}>
-              <button onClick={submitTasks} className={styles.saveBtn}>Submit Tasks</button>
-              <button onClick={() => setShowPopup(false)} className={styles.cancelBtn}>Cancel</button>
+              <button onClick={submitTasks} className={styles.saveBtn} disabled={isLoading}>
+                {isLoading ? 'Saving...' : 'Submit Tasks'}
+              </button>
+              <button onClick={() => setShowPopup(false)} className={styles.cancelBtn} disabled={isLoading}>
+                Cancel
+              </button>
             </div>
           </div>
         </div>

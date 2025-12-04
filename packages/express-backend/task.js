@@ -27,6 +27,20 @@ export async function getTasksForUserMatch(userId, matchId) {
   return data || [];
 }
 
+// Fetch ALL tasks for a match (both players)
+export async function getTasksForMatch(matchId) {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('match_id', matchId);
+  
+  if (error) {
+    console.error('Error fetching tasks for match:', error.message);
+    throw error;
+  }
+  return data || [];
+}
+
 // Add a new task
 export async function addTask({ user_id, match_id, location, description, time_to_do, complete = false }) {
   const { data, error } = await supabase.rpc('add_task', {
