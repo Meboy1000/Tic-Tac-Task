@@ -19,7 +19,6 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
   const [isLoading, setIsLoading] = useState(false);
   const [user1Id, setUser1Id] = useState(null);
   const [user2Id, setUser2Id] = useState(null);
-  const matchId = 1; // TODO: Replace with real match ID once landing page actually logs you in
   
   // load match details to get both user IDs
   useEffect(() => {
