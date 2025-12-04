@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './gameboards.module.css';
-import { getTasksForUserMatch, getTasksForMatch, addTask, deleteTask } from '../../api/task';
+import { getTasksForUserMatch, getTasksForMatch, addTask, deleteTask, markTaskComplete } from '../../api/task';
 import { getMatchById } from '../../api/match';
 
 export default function GameBoard({ onLogout, currentPlayerId = 1, userId, matchId, username }) {
@@ -58,8 +58,19 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
         tasks.tasks.forEach(task => {
           const obj = {
             name: task.description || "",
-            timeEstimate: task.time_to_do || 0
+            timeEstimate: task.time_to_do || 0,
+            complete: task.complete || false
           };
+
+          if (task.complete) {
+            setCellMarks(prev => {
+              const updated = [...prev];
+              updated[task.location] =
+                task.user_id === match.user1_id ? 1 : 2;
+              return updated;
+            });
+          }
+
           if (task.user_id === match.user1_id) p1[task.location] = obj;
           if (task.user_id === match.user2_id) p2[task.location] = obj;
         });
@@ -97,9 +108,18 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
         if (task.location >= 0 && task.location < 9) {
           const taskObj = {
             name: task.description || '',
-            timeEstimate: task.time_to_do || 0
+            timeEstimate: task.time_to_do || 0,
+            complete: !!task.complete
           };
-          
+          // auto-mark cell locally if backend says it's complete
+          if (task.complete) {
+            setCellMarks(prev => {
+              const updated = [...prev];
+              updated[task.location] = (task.user_id === user1Id ? 1 : 2);  
+              return updated;
+            });
+          }
+
           if (task.user_id === user1Id) {
             p1Tasks[task.location] = taskObj;
           } else if (task.user_id === user2Id) {
@@ -261,28 +281,28 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
     }
   };
    
-
   const handleCellClick = async (index) => {
     const newMarks = [...cellMarks];
     const currentMark = newMarks[index];
-    
-    // if cell is empty, mark it with current player
-    if (currentMark === 0) {
-      newMarks[index] = currentPlayerId;
-    }
-    // if cell is marked by current player, clear it
-    else if (currentMark === currentPlayerId) {
-      newMarks[index] = 0;
-    }
-    // if cell is marked by other player don't allow change
-    else {
-      return;
-    }
-    
-    // Update local state immediately for responsiveness
+
+    // Determine what this click should do
+    let newValue;
+    if (currentMark === 0) newValue = currentPlayerId;      // mark it
+    else if (currentMark === currentPlayerId) newValue = 0; // unmark it
+    else return; // can't overwrite opponent's mark
+
+    // Update UI immediately
+    newMarks[index] = newValue;
     setCellMarks(newMarks);
 
-    // No backend sync for marks right now
+    // If marking, call backend to mark task complete
+    if (newValue !== 0) {
+      try {
+        await markTaskComplete(userId, matchId, index);
+      } catch (err) {
+        console.error("Failed to mark complete:", err);
+      }
+    }
   };
 
   const getMark = (index) => {
