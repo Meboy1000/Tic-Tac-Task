@@ -14,10 +14,13 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenuPopup, setShowMenuPopup] = useState(false);
   const [stakes, setStakes] = useState('');
+  const [match, setMatch] = useState(null);
+  const [isWaitingForPlayer2, setIsWaitingForPlayer2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [user1Id, setUser1Id] = useState(null);
   const [user2Id, setUser2Id] = useState(null);
-
+  const matchId = 1; // TODO: Replace with real match ID once landing page actually logs you in
+  
   // load match details to get both user IDs
   useEffect(() => {
     if (matchId) {
@@ -108,6 +111,35 @@ export default function GameBoard({ onLogout, currentPlayerId = 1, userId, match
       setShowPopup(true);
     }
   }, [currentPlayerId, tasksSubmitted]);
+
+useEffect(() => {
+  const POLL_INTERVAL = 3000; // 3 seconds
+
+  async function pollGameState() {
+    try {
+      const res = await fetch(`/poll-game-state?matchId=${matchId}&user1Id=${currentPlayerId}`);
+      const data = await res.json();
+
+      if (!data.success) return;
+
+      const { match, tasks } = data;
+      setMatch(match);
+
+      setIsWaitingForPlayer2(match.user2_id === null);
+
+      if (tasks.user1) setPlayer1Tasks(tasks.user1);
+      if (tasks.user2) setPlayer2Tasks(tasks.user2);
+
+    } catch (err) {
+      console.error("Polling failed:", err);
+    }
+  }
+
+  pollGameState(); // initial fetch
+  const intervalId = setInterval(pollGameState, POLL_INTERVAL);
+
+  return () => clearInterval(intervalId);
+}, [currentPlayerId]);
 
   const openPlayerPopup = (player) => {
     setCurrentPlayer(player);
