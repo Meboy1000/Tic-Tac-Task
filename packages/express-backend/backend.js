@@ -18,6 +18,7 @@ import {
 import {
   getTask,
   getTasksForUserMatch,
+  getTasksForMatch,
   addTask,
   markTaskComplete,
   deleteTask
@@ -172,6 +173,8 @@ app.delete("/matches/:id", async (req, res) => {
   }
 });
 
+// Marks endpoints removed for now
+
 // Get (singular) task by user, match, and location
 app.get("/tasks/:userId/:matchId/:location", async (req, res) => {
   const { userId, matchId, location } = req.params;
@@ -190,6 +193,18 @@ app.get("/tasks/user/:userId/match/:matchId", async (req, res) => {
   const { userId, matchId } = req.params;
   try {
     const tasks = await getTasksForUserMatch(Number(userId), Number(matchId));
+    res.send({ tasks });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching tasks");
+  }
+});
+
+// Get ALL tasks for a match (both players)
+app.get("/tasks/match/:matchId", async (req, res) => {
+  const { matchId } = req.params;
+  try {
+    const tasks = await getTasksForMatch(Number(matchId));
     res.send({ tasks });
   } catch (error) {
     console.error(error);

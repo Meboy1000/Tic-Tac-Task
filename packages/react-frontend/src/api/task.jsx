@@ -11,6 +11,11 @@ export async function getTasksForUserMatch(userId, matchId) {
   return res.json();
 }
 
+export async function getTasksForMatch(matchId) {
+  const res = await fetch(`${BASE_URL}/tasks/match/${matchId}`);
+  return res.json();
+}
+
 export async function addTask(task) {
   const res = await fetch(`${BASE_URL}/tasks`, {
     method: "POST",
