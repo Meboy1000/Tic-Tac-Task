@@ -66,6 +66,7 @@ jobs:
         with:
           app-name: 'TicTacTask'
           slot-name: 'Production'
-          package: .
+          package: release.zip
 
           
+
