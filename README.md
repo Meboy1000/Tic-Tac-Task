@@ -7,14 +7,6 @@ Our project features a tic-tac-toe board that can host two different players tha
  - Aesthetic/game components, such as UI dark mode
  - Cookies
 
-## Disclaimer
-
-Although our frontend is deployed on the cloud as an Azure Static Apps, its connection with the backend Azure App Service is currently non-functional, likely due to our default domain deployment slot:. Due to our budget (student pricing plan), we are unable to create another deployment slot to fix this problem. 
-
-Therefore, the only way to make our static site connect with our API is to have localhost for the project running in the background, use:
-npm run dev
-Run it in the project root.
-
 ## UI Prototype (Figma)
 
 https://www.figma.com/design/qZQaWqfVrtTqMVQ5wMv03T/Frontend-UX?node-id=1-2&t=vvUeauhNY6Xsi5pQ-1
