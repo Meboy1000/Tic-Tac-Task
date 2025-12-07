@@ -75,6 +75,10 @@ You need to request for Supabase access, though.
 
 - Use Prettier
 
+## UML Class Diagram
+
+Check the UML Class Diagram in [diagrams/UmlClassDiagram.md](diagrams/UmlClassDiagram.md)
+
 ## Access Control Diagram
 
 <img width="5410" height="2652" alt="AccessControlDiagrams" src="https://github.com/user-attachments/assets/d14dadd5-ebea-4702-814c-5e472b1ddfec" />
