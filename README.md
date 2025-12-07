@@ -77,7 +77,7 @@ You need to request for Supabase access, though.
 
 ## UML Class Diagram
 
-Check the UML Class Diagram in [diagrams/UmlClassDiagram.md](diagrams/UmlClassDiagram.md)
+Check the UML Class Diagram in [docs/diagrams/UmlClassDiagram.md](docs/diagrams/UmlClassDiagram.md)
 
 ## Access Control Diagram
 
