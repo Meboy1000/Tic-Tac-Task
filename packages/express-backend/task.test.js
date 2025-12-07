@@ -2,6 +2,7 @@ import {expect} from "@jest/globals";
 import {
   getTask,
   getTasksForUserMatch,
+  getTasksForMatch,
   addTask,
   markTaskComplete,
   deleteTask
@@ -244,6 +245,54 @@ describe("Task tests", () => {
         error: err 
       });
       await expect(markTaskComplete(352, 67, 1)).rejects.toEqual(err);
+    });
+  });
+
+  // getTasksForMatch
+  describe("getTasksForMatch", () => {
+    it("returns list of all tasks for match", async () => {
+      const list = [
+        {user_id: 352, match_id: 67, location: 1, description: "task1"},
+        {user_id: 353, match_id: 67, location: 2, description: "task2"}
+      ];
+      supabase.rpc.mockResolvedValue({
+        data: list,
+        error: null
+      });
+      const res = await getTasksForMatch(67);
+      expect(res).toEqual(list);
+      expect(supabase.rpc).toHaveBeenCalledWith("get_tasks_for_match", {
+        _match_id: 67
+      });
+    });
+
+    it("returns empty list when null", async () => {
+      supabase.rpc.mockResolvedValue({ 
+        data: null, 
+        error: null 
+      });
+      const res = await getTasksForMatch(67);
+      expect(res).toEqual([]);
+    });
+
+    it("returns empty list when empty", async () => {
+      supabase.rpc.mockResolvedValue({ 
+        data: [], 
+        error: null 
+      });
+      const res = await getTasksForMatch(67);
+      expect(res).toEqual([]);
+    });
+
+    it("throws error", async () => {
+      const err = { 
+        message: "fetch failed" 
+      };
+      supabase.rpc.mockResolvedValue({ 
+        data: null, 
+        error: err 
+      });
+      await expect(getTasksForMatch(67)).rejects.toEqual(err);
     });
   });
 

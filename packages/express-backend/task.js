@@ -29,11 +29,9 @@ export async function getTasksForUserMatch(userId, matchId) {
 
 // Fetch ALL tasks for a match (both players)
 export async function getTasksForMatch(matchId) {
-  const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .eq('match_id', matchId);
-  
+  const { data, error } = await supabase.rpc('get_tasks_for_match', {
+    _match_id: matchId,
+  });
   if (error) {
     console.error('Error fetching tasks for match:', error.message);
     throw error;
